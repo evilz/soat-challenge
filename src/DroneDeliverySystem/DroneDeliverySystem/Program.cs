@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -47,30 +48,60 @@ namespace DroneDeliverySystem
 
 
             var currentDrone = 0;
+
+            var currentTargetTurn = 0;
             while (true)
             {
-                var drone = drones[currentDrone];
-                
-                var pathes = targets.Select(t => new Path(drone.Position, t,width)).ToArray();
-
-                var target = drone.AcquireTarget(pathes);
-
-                drone.IsAlive = drone.CanMoveTo(target);
-
-                if(drone.IsAlive)
+                if (drones.All(d => d.TargetReach > currentTargetTurn))
                 {
-                    drone.MoveToTarget(target);
-                    targets.Remove(drone.Position);
+                    currentTargetTurn++;
                 }
+
+                var pathes = (
+                    from d in drones
+                    from t in targets
+                    where d.TargetReach <= currentTargetTurn
+                    where d.IsAlive
+                    select new Path(d, t, width))
+                    .ToArray();
+                     
+                Console.Clear();
+                Console.WriteLine($"Pathes : {pathes.Length}");       
+                
+                if(!pathes.Any()) break;
+
+                var bestPath = pathes.OrderBy(path => path.Distance).First();
+
+                bestPath.Drone.IsAlive = bestPath.Drone.CanMoveTo(bestPath);
+                if (bestPath.Drone.IsAlive)
+                {
+                    bestPath.Drone.MoveToTarget(bestPath);
+
+                    targets.Remove(bestPath.Destination);
+                }
+                   
+
+                //var drone = drones[currentDrone];
+
+
+                //var pathes = targets.Select(t => new Path(drone.Position, t,width)).ToArray();
+                //var target = drone.AcquireTarget(pathes);
+                //drone.IsAlive = drone.CanMoveTo(target);
+
+                //if(drone.IsAlive)
+                //{
+                //    drone.MoveToTarget(target);
+                //    targets.Remove(drone.Position);
+                //}
                
                 if (drones.All(d => !d.IsAlive) || !targets.Any())
                 {
                     break;
                 }
 
-                currentDrone = currentDrone == droneCount - 1 
-                    ? 0 
-                    : currentDrone + 1;
+                //currentDrone = currentDrone == droneCount - 1 
+                //    ? 0 
+                //    : currentDrone + 1;
             }
 
             var droneOutput =

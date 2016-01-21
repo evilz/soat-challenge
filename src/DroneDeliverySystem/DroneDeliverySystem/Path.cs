@@ -7,42 +7,69 @@ namespace DroneDeliverySystem
 {
     public class Path
     {
+        public Drone Drone { get; }
         private readonly int _witdh;
 
-        public Path(Point origine, Point destination,int witdh)
+        private Moves _XDirection = Moves.Stand;
+        private Moves _YDirection = Moves.Stand;
+
+        public Path(Drone drone, Point destination, int witdh)
         {
+            Drone = drone;
             _witdh = witdh;
-            Origine = origine;
+            Origine = drone.Position;
             Destination = destination;
-            Distance = origine.GetDistanceTo(destination,witdh);
+
+    
         }
 
         public Point Origine { get; }
         public Point Destination { get; }
-        public int Distance { get; }
-        
+
+
+        private int YDistance
+        {
+            get
+            {
+                if (Origine.Y > Destination.Y)
+                {
+                    _YDirection = Moves.Up;
+                    return Origine.Y - Destination.Y;
+                }
+
+                _YDirection = Moves.Down;
+                return Destination.Y - Origine.Y;
+            }
+        }
+
+        private int XDistance
+        {
+            get
+            {
+                var maxX = Math.Max(Origine.X, Destination.X);
+                var minX = Math.Min(Origine.X, Destination.X);
+                var diff = maxX - minX;
+
+                if (diff < _witdh / 2)
+                {
+                    _XDirection = Origine.X < Destination.X ? Moves.Right : Moves.Left;
+                    return diff;
+                }
+                _XDirection = Origine.X < Destination.X ? Moves.Left : Moves.Right;
+                return _witdh - maxX + minX;
+            }
+        }
+
+        public int Distance => XDistance + YDistance;
+
         public IEnumerable<Moves> GetXMoves()
         {
-            // TODO : Look not good ??? 140 226 615 point(s) WTF
-
-            var x1 = Math.Abs(Destination.X - Origine.X); // go left
-            var x2 = Math.Abs(Origine.X - _witdh + Destination.X); //right
-            
-            return x1 <= x2
-                ? Enumerable.Range(0, Math.Abs(x1)).Select(i => Moves.Left)
-                : Enumerable.Range(0, Math.Abs(x2)).Select(i => Moves.Right);
-
-            //return x > 0
-            //    ? Enumerable.Range(0, Math.Abs(x)).Select(i => Moves.Right)
-            //    : Enumerable.Range(0, Math.Abs(x)).Select(i => Moves.Left);
+            return Enumerable.Range(0, XDistance).Select(i => _XDirection);
         }
 
         public IEnumerable<Moves> GetYMoves()
         {
-            var y = Destination.Y - Origine.Y;
-            return y > 0
-                ? Enumerable.Range(0, Math.Abs(y)).Select(i => Moves.Down)
-                : Enumerable.Range(0, Math.Abs(y)).Select(i => Moves.Up);
+            return Enumerable.Range(0, YDistance).Select(i => _YDirection);
 
         }
     }

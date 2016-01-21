@@ -27,7 +27,7 @@ namespace DroneDeliverySystem
         }
 
         public List<Moves> Moves { get; } = new List<Moves>();
-        public bool IsAlive  { get; set; }
+        public bool IsAlive { get; set; } = true;
 
         public void MoveToTarget(Path target)
         {
