@@ -7,9 +7,7 @@ namespace DroneDeliverySystem
 {
     public class Path
     {
-        public Drone Drone { get; }
         private readonly int _witdh;
-
         private Moves _XDirection = Moves.Stand;
         private Moves _YDirection = Moves.Stand;
 
@@ -19,10 +17,9 @@ namespace DroneDeliverySystem
             _witdh = witdh;
             Origine = drone.Position;
             Destination = destination;
-
-    
         }
 
+        public Drone Drone { get; }
         public Point Origine { get; }
         public Point Destination { get; }
 
@@ -59,18 +56,13 @@ namespace DroneDeliverySystem
                 return _witdh - maxX + minX;
             }
         }
-
+         
         public int Distance => XDistance + YDistance;
 
-        public IEnumerable<Moves> GetXMoves()
-        {
-            return Enumerable.Range(0, XDistance).Select(i => _XDirection);
-        }
+        public IEnumerable<Moves> GetXMoves => Enumerable.Range(0, XDistance).Select(i => _XDirection);
+        
 
-        public IEnumerable<Moves> GetYMoves()
-        {
-            return Enumerable.Range(0, YDistance).Select(i => _YDirection);
+        public IEnumerable<Moves> GetYMoves => Enumerable.Range(0, YDistance).Select(i => _YDirection);
 
-        }
     }
 }

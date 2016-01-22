@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drone.cs" />
-    <Compile Include="Helpers.cs" />
     <Compile Include="Moves.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Program.cs" />

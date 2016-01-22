@@ -32,41 +32,41 @@ namespace DroneDeliverySystem
             var targets = Enumerable.Range(0, targetCount)
                 .Select(i => input.ReadLine().Split(' ').Select(int.Parse).ToArray())
                 .Select(i => new Point(i[1], i[0]))
-                //.OrderBy(point => point.X)
-                //.ThenBy(point => point.Y)
-                //.Where(point => startPosition.GetDistanceTo(point,width) <= maxMove)
                 .ToList();
 
            
             var drones = Enumerable.Range(0, droneCount)
-                .Select(i => new Drone
-                {
-                    Position = startPosition,
-                    Ttl = maxMove - (4*40)
-                })
+                .Select(i => new Drone(startPosition,maxMove - (4*40)))
                 .ToArray();
-
-
-            var currentDrone = 0;
-
+            
             var currentTargetTurn = 0;
-            while (true)
-            {
-                if (drones.All(d => d.TargetReach > currentTargetTurn))
-                {
-                    currentTargetTurn++;
-                }
 
-                var pathes = (
+            var pathes = (
                     from d in drones
                     from t in targets
                     where d.TargetReach <= currentTargetTurn
                     where d.IsAlive
                     select new Path(d, t, width))
-                    .ToArray();
-                     
+                    .ToList();
+
+
+            while (true)
+            {
+                if (drones.All(d => d.TargetReach > currentTargetTurn))
+                {
+                    currentTargetTurn++;
+                     pathes = (
+                   from d in drones
+                   from t in targets
+                   where d.TargetReach <= currentTargetTurn
+                   where d.IsAlive
+                   select new Path(d, t, width))
+                   .ToList();
+                }
+
+                
                 Console.Clear();
-                Console.WriteLine($"Pathes : {pathes.Length}");       
+                Console.WriteLine($"Pathes : {pathes.Count}");       
                 
                 if(!pathes.Any()) break;
 
@@ -76,32 +76,16 @@ namespace DroneDeliverySystem
                 if (bestPath.Drone.IsAlive)
                 {
                     bestPath.Drone.MoveToTarget(bestPath);
-
                     targets.Remove(bestPath.Destination);
+
+                    pathes.RemoveAll(path => path.Drone == bestPath.Drone || path.Destination == bestPath.Destination);
                 }
                    
-
-                //var drone = drones[currentDrone];
-
-
-                //var pathes = targets.Select(t => new Path(drone.Position, t,width)).ToArray();
-                //var target = drone.AcquireTarget(pathes);
-                //drone.IsAlive = drone.CanMoveTo(target);
-
-                //if(drone.IsAlive)
-                //{
-                //    drone.MoveToTarget(target);
-                //    targets.Remove(drone.Position);
-                //}
-               
                 if (drones.All(d => !d.IsAlive) || !targets.Any())
                 {
                     break;
                 }
-
-                //currentDrone = currentDrone == droneCount - 1 
-                //    ? 0 
-                //    : currentDrone + 1;
+                
             }
 
             var droneOutput =
@@ -112,8 +96,12 @@ namespace DroneDeliverySystem
 
 
             var result = string.Join("\n", droneOutput);
-            var score = drones.Sum(d => d.TargetReach);
+            var targetHit = drones.Sum(d => d.TargetReach);
+
+            var score = targetHit*((maxMove*droneCount) - drones.Sum(d => d.Moves.Count));
+            Console.WriteLine($"Score = {score}");
             File.WriteAllText("output.txt", result);
+            Console.ReadLine();
         }
     }
 }

@@ -1,29 +1,25 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace DroneDeliverySystem
 {
     public class Drone
     {
-        public int Ttl { private get; set; }
-
-        public Point Position { get; set; }
-        
-        public int TargetReach { get; private set; }
-
-        public Path AcquireTarget(Path[] availableTargets)
+        public Drone(Point position, int ttl)
         {
-            var minDistance = availableTargets.Min(arg => arg.Distance);
-            var selectedTarget = availableTargets.Where(arg => arg.Distance == minDistance).Suffle().First();
-
-            return selectedTarget;
+            _ttl = ttl;
+            Position = position;
         }
 
+        private int _ttl;
 
+        public Point Position { get; private set; }
+        
+        public int TargetReach { get; private set; }
+        
         public bool CanMoveTo(Path target)
         {
-            return Ttl >= target.Distance;
+            return _ttl >= target.Distance;
         }
 
         public List<Moves> Moves { get; } = new List<Moves>();
@@ -31,10 +27,10 @@ namespace DroneDeliverySystem
 
         public void MoveToTarget(Path target)
         {
-            Moves.AddRange(target.GetXMoves());
-            Moves.AddRange(target.GetYMoves());
+            Moves.AddRange(target.GetXMoves);
+            Moves.AddRange(target.GetYMoves);
             TargetReach++;
-            Ttl -= target.Distance;
+            _ttl -= target.Distance;
             Position = target.Destination;
         }
     }
