@@ -3,7 +3,7 @@
 **Url :** http://soat-challenge.cloudapp.net/
 **Twitter :** https://twitter.com/search?f=tweets&q=%23soatchallenge&src=typd
 
-![](./media/logo.png)
+![](/logo.png)
 
 * [Introduction](#introduction)
 * [Tâche](#tâche)
@@ -33,7 +33,7 @@ A partir des coordonnées des points de livraison, vous devez planifier les dép
 
 Les drones volent au dessus d’une section de la terre délimitée par deux parallèles.
 
-![](./media/map.png)
+![](/map.png)
 
 *Exemple d’une section de la surface de la terre, délimitée par deux parallèles.*
 
@@ -41,7 +41,7 @@ Cette section est représentée par une grille rectangulaire en deux dimensions,
   
 Comme la terre est ronde, la grille boucle aux extrémités des lignes. C'est-­à-­dire que chaque case **\[r, 0\]** est voisine des cases **\[r, C - 1\]** et **\[r, 1\]**. La grille ne boucle pas ​aux extrémités des colonnes.
 
-![](./media/navigation.png)
+![](/navigation.png)
 
 *Un exemple de grille avec la case \[0, 0\] dans le coin supérieur gauche. Deux cases sont marquées en noir et les cases avec lesquelles elles sont voisines en vert et bleu.*
 
@@ -51,9 +51,9 @@ Au démarrage de la simulation, tous les drones sont dans la même case de dépa
 
 La simulation fonctionne par tour. Au début de chaque tour :
 
-* les drones qui sont déjà en vol peuvent ajuster leur déplacement sur la carte de 1 ![](./media/direction-left.png), 2
-![](./media/direction-up.png), 3 ![](./media/direction-right.png) ou 
-4 ![](./media/direction-bottom.png). Un drone qui a décollé ne peut plus jamais se poser durant la simulation.
+* les drones qui sont déjà en vol peuvent ajuster leur déplacement sur la carte de 1 ![](/direction-left.png), 2
+![](/direction-up.png), 3 ![](/direction-right.png) ou 
+4 ![](/direction-bottom.png). Un drone qui a décollé ne peut plus jamais se poser durant la simulation.
 
 * les drones qui sont encore au sol peuvent décoller (en démarrant leur déplacement par 1, 2, 3 ou 4) ou rester au sol (en appliquant un déplacement de 0).
 
@@ -128,7 +128,7 @@ Voici un exemple de fichier d’entrée :
 
 Visualisation de la case de départ des drones et des cases cible sur la carte :
 
-![](./media/grid.png)
+![](/grid.png)
 
 ## Soumissions
 
@@ -150,7 +150,7 @@ Le fichier de soumission suivant correspond à l'exemple de fichier d'entrée do
 
 Visualisation des déplacements du drone 1 sur la carte à la fin de chaque tour:
 
-![](./media/moves.png)
+![](/moves.png)
 
 A la fin du tour 12, le drone a livré ses 3 colis et rentrera automatiquement à l'entrepôt.  
 Cette soumission atteindra donc un score de 3 colis livré pondéré par le nombre de déplacement effectué.
